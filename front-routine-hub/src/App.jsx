@@ -2,6 +2,8 @@ import React from 'react';
 import { PriceDashboard } from './PriceDashboard';
 import { PriceAnalysis }  from './PriceAnalysis';
 import { NutritionDashboard } from './NutritionDashboard'
+import DiscountBanner from './DiscountBanner';
+import ReferralInfo from './ReferralInfo';
 import './App.css';
 
 function App() {
@@ -9,6 +11,7 @@ function App() {
 
   return (
     <div className="app-container">
+      <DiscountBanner />
       <h1>Impact Whey Protein 가격 변동</h1>
 
       <div className="dashboard-container">
@@ -21,6 +24,7 @@ function App() {
           <PriceAnalysis code={productCode} />
         </div>
       </div>
+      <ReferralInfo />
     </div>
   );
 }

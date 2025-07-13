@@ -33,12 +33,12 @@ public class MyProteinCrawlerService {
     private static final String BASKET_URL    = "https://www.myprotein.co.kr/basket/";
     private static final String PRODUCT_URL   = "https://www.myprotein.co.kr/p/.../10530943/";
     private static final String PRODUCT_CODE  = "IMPACT_WHEY_10530943";
-    private static final String DISCOUNT_CODE = "77KAKAO";
+    private static final String DISCOUNT_CODE = "Tomato";
     private static final String FLAVOR_TEXT   = "내추럴 초콜렛";
     private static final String AMOUNT_KEY    = "2x2.5kg";
 
     // @PostConstruct
-    @Scheduled(cron = "0 0 */6 * * *")
+    @Scheduled(cron = "0 0 7 * * * ", zone="Asia/Seoul")
     public void scheduledTask() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 

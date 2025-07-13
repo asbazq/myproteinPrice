@@ -4,6 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip,
   CartesianGrid, ResponsiveContainer, Legend
 } from 'recharts'
+import './App.css'
 
 // 1. 데이터 정의 (맛별 영양성분)
 const NUTRITION_DATA = [
@@ -86,7 +87,7 @@ export function NutritionDashboard() {
 
       {/* 영양성분 막대그래프 */}
       <div className="chart">
-        <ResponsiveContainer width={400} height={400}>
+        <ResponsiveContainer width="100%" height={400}>
             <BarChart data={chartData} margin={{ top: 20, right: 30, bottom: 20, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" tick={{ fontSize: 12 }} />

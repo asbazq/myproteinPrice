@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.baseURL = 'http://43.201.28.73:8080';
 
 export function PriceAnalysis({ code }) {
   const [avgWeek, setAvgWeek]               = useState(null);
@@ -57,7 +57,7 @@ export function PriceAnalysis({ code }) {
       {forecast && (
         <div className="forecast mt-6 p-4 bg-gray-50 rounded">
           <p>
-            다음 예측 가격:  
+            내일 예측 가격:  
             <strong> ₩{Math.round(forecast.nextPrice).toLocaleString()}</strong>
           </p>
           <p>

@@ -26,8 +26,11 @@ public class CorsConfig {
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/price/**").permitAll()
+                .requestMatchers(
+                                "/", "/index.html", "/static/**", "/**/*.js", "/**/*.css"
+                                ).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
+                // .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().denyAll()
             )
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -41,7 +44,7 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         // 전역 CORS 정책 정의
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.201.28.73:8080", "http://43.201.28.73", "http://proteintracker.store/", "http://proteintracker.store:8080"));
         config.setAllowedMethods(List.of("GET","POST","OPTIONS","PUT","DELETE"));
         config.setAllowedHeaders(List.of("Content-Type","X-User-UUID"));
         config.setAllowCredentials(false);

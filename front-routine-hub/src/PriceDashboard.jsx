@@ -5,7 +5,7 @@ import {
   CartesianGrid, ResponsiveContainer
 } from 'recharts';
 
-axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.baseURL = 'http://43.201.28.73:8080';
 
 export function PriceDashboard({ code }) {
   const [period, setPeriod]   = useState("yearly");
