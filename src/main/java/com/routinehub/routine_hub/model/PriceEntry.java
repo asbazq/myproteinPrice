@@ -1,6 +1,6 @@
 package com.routinehub.routine_hub.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
-// src/main/java/com/example/pricecrawler/domain/PriceEntry.java
 @Entity
 @Table(name="price_entry")
 @Getter
@@ -25,7 +24,7 @@ public class PriceEntry {
     private int price;
     private int discountAmount;
     private int discountRate;
-    private LocalDateTime scrapedAt;
+    private OffsetDateTime scrapedAt;
 
     public void setProductCode(String productCode) {
         this.productCode = productCode;
@@ -55,7 +54,7 @@ public class PriceEntry {
         this.discountRate = discountRate;
     }
 
-    public void setScrapedAt(LocalDateTime scrapedAt) {
+    public void setScrapedAt(OffsetDateTime scrapedAt) {
         this.scrapedAt = scrapedAt;
     }
 }

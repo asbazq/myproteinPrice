@@ -266,3 +266,36 @@
     padding: 0.75rem;
   }
 }
+
+/* ── 9. 커스텀 Offset 예측 ── */
+.custom-offset-predictor {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb; /* light gray */
+  border-radius: 0.375rem;
+  border: 1px solid #e5e7eb;
+}
+
+.custom-offset-predictor label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.custom-offset-predictor select {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  background: white;
+  font-size: 0.875rem;
+}
+
+.custom-offset-predictor .result {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.custom-offset-predictor .result strong {
+  color: #c2410c; /* A different color to make it stand out */
+}

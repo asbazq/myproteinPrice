@@ -1,9 +1,9 @@
 package com.routinehub.routine_hub.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record PriceHistoryDto(
-    LocalDateTime scrapedAt,
+    OffsetDateTime scrapedAt,
     int price,
     int originPrice,
     int discountRate
