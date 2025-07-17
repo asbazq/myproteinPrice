@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchSessionException;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -44,7 +46,29 @@ public class MyProteinCrawlerService {
     @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Seoul")
     // @Scheduled(initialDelay = 3_000, fixedDelay = Long.MAX_VALUE)  // 테스트용
     public void scheduledTask() {
+        runWithRetry(3);   // ← 최대 3회 재시도
+    }
 
+    private void runWithRetry(int maxRetry) {
+        int attempt = 0;
+        while (attempt < maxRetry) {
+            try {
+                scheduledTaskBody();         // 실제 크롤링
+                return;                       // 성공 시 종료
+            } catch (SessionNotCreatedException |
+                     NoSuchSessionException e) {
+                attempt++;
+                log.warn("WebDriver 세션 오류, 재시도 {}/{}", attempt, maxRetry, e);
+                sleepSilently(3000);          // 3초 대기 후 재시도
+            } catch (Exception e) {           // 기타 예외 → 바로 로그 후 종료
+                log.error("scheduledTask 예외", e);
+                return;
+            }
+        }
+        log.error("WebDriver 세션 재시도 {}회 모두 실패", maxRetry);
+    }
+
+    private void scheduledTaskBody() throws Exception {
         Path       tmpProfile = null;
         WebDriver  driver     = null;
 
@@ -62,7 +86,7 @@ public class MyProteinCrawlerService {
             opts.setBinary(chromeBin);
             opts.addArguments(
                 "--headless=new", "--no-sandbox", "--disable-dev-shm-usage",
-                "--disable-setuid-sandbox", "--single-process",
+                "--disable-setuid-sandbox", "--disable-gpu",
                 "--window-size=1920,1080",
                 "--user-data-dir=" + tmpProfile.toAbsolutePath(),
                 "--remote-allow-origins=*"
@@ -221,6 +245,10 @@ public class MyProteinCrawlerService {
                 catch (Exception ignored) {}
             });
         }
+    }
+
+    private static void sleepSilently(long millis) {
+        try { Thread.sleep(millis); } catch (InterruptedException ignored) {}
     }
 
 }
