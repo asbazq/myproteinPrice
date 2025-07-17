@@ -1,6 +1,7 @@
 # RoutineHub – 마이프로틴 가격 추적 & 예측 서비스
 
 마이프로틴(IMPACT WHEY 2×2.5 kg)의 **실시간 가격**을 수집·저장하고, ARIMA/ARX 모델로 **단기 가격을 예측**하여 리액트 대시보드로 시각화하는 **풀스택 애플리케이션**입니다.
+<img width="1897" height="850" alt="image" src="https://github.com/user-attachments/assets/4b650776-d8e2-43b9-be88-10b109c02148" />
 
 ---
 
@@ -139,7 +140,6 @@ npm start  # http://localhost:3000
 
 ```
 backend/
-  ├─ config/          # ChromeOptions 빈
   ├─ controller/
   ├─ model/           # JPA 엔티티 & DTO
   ├─ repository/
