@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://43.201.28.73:8080';
+axios.defaults.baseURL = 'http://43.201.99.85:8080';
 
 export function PriceAnalysis({ code }) {
   const [avgWeek,       setAvgWeek]       = useState(null);

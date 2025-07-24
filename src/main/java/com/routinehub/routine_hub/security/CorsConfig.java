@@ -44,7 +44,7 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         // 전역 CORS 정책 정의
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.201.28.73:8080", "http://43.201.28.73", "http://proteintracker.store/", "http://proteintracker.store:8080"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.201.99.85:8080", "http://43.201.99.85", "http://proteintracker.store/", "http://proteintracker.store:8080"));
         config.setAllowedMethods(List.of("GET","POST","OPTIONS","PUT","DELETE"));
         config.setAllowedHeaders(List.of("Content-Type","X-User-UUID"));
         config.setAllowCredentials(false);

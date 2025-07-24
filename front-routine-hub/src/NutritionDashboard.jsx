@@ -61,10 +61,10 @@ export function NutritionDashboard() {
 
   // BarChart 에 전달할 형태로 변환
   const chartData = [
-    { name: '칼로리 (kcal)', value: nut.calories },
     { name: '탄수화물 (g)', value: nut.carbs },
     { name: '단백질 (g)', value: nut.protein },
-    { name: '지방 (g)', value: nut.fat }
+    { name: '지방 (g)', value: nut.fat },
+    { name: '칼로리 (kcal)', value: nut.calories }
   ]
 
   return (

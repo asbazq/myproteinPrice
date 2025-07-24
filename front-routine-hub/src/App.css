@@ -1,3 +1,10 @@
+html, body {
+  overflow-x: hidden;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* ── 1. App 전체 컨테이너 ── */
 .app-container {
   width: 100%;
@@ -39,21 +46,33 @@
 
 /* ── 5. 기간 선택 버튼 ── */
 .period-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
   margin-bottom: 1rem;
 }
 .period-select button {
-  margin-right: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+  padding: .5rem 1rem;
+  font-size: .875rem;
   border: 1px solid #ccc;
-  background: white;
+  border-radius: .375rem;
+  background: #fff;
   cursor: pointer;
-  font-size: 0.875rem;
+  line-height: 1.2;
 }
 .period-select button.active {
   background: #2a9d8f;
-  color: white;
+  color: #fff;
   border-color: #2a9d8f;
+}
+
+@media (max-width: 480px) {
+  .period-select button {
+    padding: .4rem .6rem;
+    font-size: .75rem;              /* 더 작게 */
+    flex: 1 1 calc(50% - .5rem);    /* 2열 그리드처럼 */
+    text-align: center;
+  }
 }
 
 /* ── 6. 툴팁 텍스트 ── */
@@ -161,13 +180,10 @@
   height: 400px;           /* 원하는 차트 높이 */
 }
 
-.chart {
-  width: 400px;        /* 부모 .price-dashboard 에서 물려받은 100% */
-  height: 400px;      /* 원하는 높이 */
-  /* 필요시 max-width 도 걸어줄 수 있습니다 */
-  /* max-width: 600px; */
-}
 
+.dashboard-container > * {
+  min-width: 0;   /* flex item 기본 min-width:auto → overflow 방지 */
+}
 .nutrition-dashboard {
   max-width: 600px;
   margin: 0 auto;
@@ -298,4 +314,161 @@
 
 .custom-offset-predictor .result strong {
   color: #c2410c; /* A different color to make it stand out */
+}
+
+
+/* ---------- Nav ---------- */
+.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,.8);
+  border-radius: .5rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+
+.nav-link {
+  font-size: .875rem;
+  font-weight: 500;
+  color: #2563eb;
+  text-underline-offset: 3px;
+  text-decoration: underline;
+  opacity: .85;
+  transition: opacity .15s, color .15s;
+}
+.nav-link:hover { opacity: 1; color: #1d4ed8; }
+.nav-link.active {
+  color: #111827;
+  opacity: 1;
+  text-decoration: none;
+  position: relative;
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -3px;
+  width: 100%; height: 2px;
+  background: #2563eb;
+  border-radius: 2px;
+}
+
+/* ---------- 1RM Calculator ---------- */
+.one-rm {
+  margin-top: 1.5rem;
+}
+
+.sec-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.form-row {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.form-row label {
+  font-size: .9rem;
+  font-weight: 600;
+  color: #374151;
+}
+.form-row input {
+  padding: .55rem .75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: .375rem;
+  font-size: .9rem;
+  transition: border-color .15s, box-shadow .15s;
+}
+.form-row input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px #2563eb33;
+  outline: none;
+}
+
+.rec-text {
+  font-size: .85rem;
+  color: #4b5563;
+  margin-bottom: .75rem;
+}
+.rec-text span {
+  font-weight: 600;
+  color: #111827;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.rm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem;
+}
+.rm-table th,
+.rm-table td {
+  border: 1px solid #e5e7eb;
+  padding: .55rem .7rem;
+  line-height: 1.35;
+}
+.rm-table thead {
+  background: #f3f4f6;
+  color: #374151;
+}
+.rm-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.badge {
+  margin-left: .4rem;
+  font-size: .7rem;
+  background: #16a34a;
+  color: #fff;
+  padding: 0.15rem .35rem;
+  border-radius: .25rem;
+  vertical-align: middle;
+}
+
+.recommended-row {
+  background: #f0fdf4;           /* green-50 */
+}
+.recommended-row td:first-child {
+  position: relative;
+}
+.recommended-row td:first-child::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  width: 3px;
+  background: #16a34a;
+}
+
+.recommended-row {
+  outline: 2px solid #16a34a;   /* 초록 테두리 */
+  outline-offset: -2px;          /* 표 안쪽으로 붙게 */
+  border-collapse: separate;     /* 일부 브라우저에서 outline 보정 */
+}
+
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .main-nav {
+    gap: .75rem;
+    padding: .5rem .75rem;
+    margin-bottom: 1rem;
+  }
+  .nav-link { font-size: .8rem; }
+
+  .sec-title { font-size: 1.15rem; }
+  .form-row input { font-size: .85rem; }
+  .rm-table { font-size: .8rem; }
+  .badge{ display:none; }
 }

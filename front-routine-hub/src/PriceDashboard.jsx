@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
   CartesianGrid, ResponsiveContainer
 } from 'recharts';
 
-axios.defaults.baseURL = 'http://43.201.28.73:8080';
+axios.defaults.baseURL = 'http://43.201.99.85:8080';
 
 export function PriceDashboard({ code }) {
   const [period, setPeriod]   = useState("yearly");
@@ -13,7 +13,12 @@ export function PriceDashboard({ code }) {
   const [best, setBest] = useState(null);
   const [forecast30, setForecast30]   = useState([]);
   const [showMonthOnly, setShowMonthOnly] = useState(false);
-
+  const isMobile = window.matchMedia('(max-width:480px)').matches;
+  const historyForChart = useMemo(() => {
+  if (!isMobile || period !== 'monthly') return history;
+  // 3개 중 1개만 남김(원하는 간격으로 조절: 2,3,4…)
+  return history.filter((_, i) => i % 3 === 0);
+}, [history, isMobile, period]);
   
 useEffect(() => {
   axios.get('/api/price/myprotein/history', {
@@ -78,14 +83,16 @@ const fetchMonthForecast = () => {
     .get('/api/price/myprotein/forecast/multi', {
       params: { code, horizonDays: 30 }   // ← 1~30일 전체
     })
-    .then(({ data }) =>
-      setForecast30(
-        data.points.map(p => ({
-          label: p.date.split('T')[0],
-          predictedPrice: p.predictedPrice
-        }))
-      )
-    )
+    .then(({ data }) => {
+      let points = data.points.map(p => ({
+        label: p.date.split('T')[0],
+        predictedPrice: p.predictedPrice
+      }));
+      if (isMobile) {
+        points = points.filter((_, i) => i % 2 === 0); // 2일에 1개만
+      }
+      setForecast30(points);
+    })
     .catch(console.error)
     .finally(() => setShowMonthOnly(true));
 };
@@ -159,18 +166,22 @@ const fetchMonthForecast = () => {
       ) : (
         history.length > 0 ? (
           <div className="chart-wrapper">
-          <ResponsiveContainer width="100%" height={450}>
-            <LineChart data={history} margin={{ bottom: 60 }}>
+           <ResponsiveContainer width="100%" height={isMobile ? 320 : 450}>
+            <LineChart data={historyForChart} margin={{ bottom: isMobile ? 30 : 60 }}>
               <CartesianGrid stroke="#eee" />
 
               {/* X축: 날짜/시간 */}
               <XAxis
                 dataKey="label"
                 interval={0}
-                height={60}
-                tick={{ fontSize: 12 }}
+                height={isMobile ? 30 : 60}
+                tick={{ fontSize: isMobile ? 10 : 12 }}
+                tickFormatter={(v, i) =>
+                  (isMobile && period === 'monthly' && i % 2 !== 0) ? '' : v
+                }
                 angle={-45}
-                textAnchor="end"
+                textAnchor={isMobile ? 'middle' : 'end'}
+                tickMargin={isMobile ? 20 : 16}
               />
 
               {/* 왼쪽 Y축: 가격 (150,000원 ~ 300,000원) */}

@@ -89,7 +89,7 @@ public class PriceForecastService {
         }
 
         // OLS 파라미터 계산 (ARX(1))
-         double[] prices = hist.stream().mapToDouble(PriceEntry::getPrice).toArray();
+        double[] prices = hist.stream().mapToDouble(PriceEntry::getPrice).toArray();
         OffsetDateTime[] dateTimes = hist.stream()
             .map(PriceEntry::getScrapedAt)
             .toArray(OffsetDateTime[]::new);
