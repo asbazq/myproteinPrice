@@ -2,6 +2,7 @@
 
 마이프로틴(IMPACT WHEY 2×2.5 kg)의 **실시간 가격**을 수집·저장하고, ARIMA/ARX 모델로 **단기 가격을 예측**하여 리액트 대시보드로 시각화하는 **풀스택 애플리케이션**입니다.
 <img width="1897" height="850" alt="image" src="https://github.com/user-attachments/assets/4b650776-d8e2-43b9-be88-10b109c02148" />
+<img width="1912" height="903" alt="image" src="https://github.com/user-attachments/assets/4fc9ee33-7448-4864-8a47-8f11303a3fb1" />
 
 ---
 
@@ -14,6 +15,7 @@
 | **가격 예측**                    | 휴일 더미 변수를 포함한 ARX(1) 모델 → **내일·7일·30일·N일 후·다음 달 최저가** 예측                                      |
 | **대시보드 (React 18)**          | `PriceDashboard.jsx` : 히스토리 & 필터, 30일 예측 버튼<br>`PriceAnalysis.jsx` : 내일/최저/커스텀 예측·가격 하락 확률 표시 |
 | **스타일**                      | Tailwind 유틸리티 + `App.css`, 차트는 **Recharts** 사용                                                |
+|**1RM 계산**|여러 1RM 공식을 통한 계산과 추천|
 
 ---
 
@@ -64,10 +66,6 @@
 # 프로젝트 클론
 $ git clone https://github.com/your‑org/routine‑hub.git
 $ cd routine‑hub
-
-# 크롬 환경 변수 (예시)
-export WEB_DRIVER_CHROME_BIN=/usr/bin/chromium-browser
-export WEB_DRIVER_CHROME_DRIVER=/usr/bin/chromedriver
 ```
 
 ### 2) 데이터베이스
