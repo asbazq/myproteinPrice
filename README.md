@@ -126,13 +126,126 @@ npm start  # http://localhost:3000
 
 ---
 
-## 🩹 문제 해결 FAQ
+## 🛠 문제 해결 — 리눅스 환경 Headless Chrome + Selenium
 
-| 증상                                                                  | 해결 방법                                                              |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `SessionNotCreatedException: user data directory is already in use` | 크론마다 **새 ChromeOptions** + `--user-data-dir` 임시 폴더 사용 (프로젝트 기본 구현) |
-| `Timeout waiting for promo-code-input`                              | 마이프로틴 페이지 구조 변경 ⇒ `scrapPrice()` 의 CSS 선택자 업데이트                    |
-| 그래프 오른쪽 잘림                                                          | `.chart-wrapper { padding-right:… }` 또는 `margin={{ right: X }}` 조정 |
+### 1. `session not created: probably user data directory is already in use`
+
+**원인**  
+Snap Chromium 은 기본 프로필(`~/.config/chromium`)을 두 인스턴스 이상 열지 못함 → 잠금 충돌.
+
+**해결**
+
+```java
+// 실행마다 고유 프로필 사용
+Path tmp = Files.createTempDirectory("cprof-");
+opts.addArguments("--user-data-dir=" + tmp);
+
+try (ChromeDriver driver = new ChromeDriver(opts)) {
+    … // 크롤링 작업
+} finally {
+    FileSystemUtils.deleteRecursively(tmp); // 잠금 파일 제거
+}
+````
+
+---
+
+### 2. `DevToolsActivePort file doesn’t exist`
+
+**원인**
+ChromeDriver 버전 ≠ 크롬(Chromium) 버전 → 브라우저가 즉시 크래시.
+
+**해결**
+
+```java
+// A) 버전을 “점까지” 맞춤 (chromium --version 결과 그대로)
+WebDriverManager.chromedriver()
+        .driverVersion("138.0.7204.168")
+        .setup();
+
+// B) Snap 대신 google‑chrome‑stable(.deb) 설치
+//    Selenium Manager / WebDriverManager 가 알아서 드라이버 매칭
+```
+
+---
+
+### 3. `no chrome binary at …`
+
+**원인**
+ChromeDriver 가 래퍼 스크립트만 보고 실제 ELF 바이너리를 못 찾음,
+또는 프로세스가 보는 파일시스템 내에 바이너리가 없음.
+
+**해결**
+
+```java
+String CHROME = "/opt/google/chrome/chrome"; // 실제 ELF 파일
+
+// 드라이버에게 경로를 명시
+System.setProperty("webdriver.chrome.binary", CHROME);
+
+ChromeOptions opts = new ChromeOptions();
+opts.setBinary(CHROME);
+
+```
+
+---
+
+### 4. `browserPath(String)` 메서드가 없음
+
+**원인**
+WebDriverManager 하위 버전(5.3 이전)이 캐시에 남아 있음.
+
+**해결**
+
+> 버전과 무관하게 항상 동작
+> `System.setProperty("webdriver.chrome.binary", "/opt/google/chrome/chrome")`
+> 한 줄을 추가
+
+
+---
+
+#### 최종 작동 스니펫 (가장 안정 조합)
+
+```java
+// 0. 임시 프로필 (잠금 충돌 방지)
+Path tmp = Files.createTempDirectory("cprof-");
+
+// 1. 드라이버 ↔ 크롬 빌드 ‘점까지’ 일치
+WebDriverManager.chromedriver()
+        .driverVersion("138.0.7204.168")        // google-chrome --version 그대로
+        .setup();
+
+// 2. 브라우저 ELF 경로 명시
+System.setProperty("webdriver.chrome.binary",
+        "/opt/google/chrome/chrome");
+
+ChromeOptions opts = new ChromeOptions();
+opts.setBinary("/opt/google/chrome/chrome");
+opts.addArguments(
+        "--headless",
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--disable-gpu",
+        "--window-size=1920,1080",
+        "--remote-allow-origins=*",
+        "--user-data-dir=" + tmp
+);
+
+ChromeDriver driver = new ChromeDriver(opts);
+try {
+    // …크롤링 작업…
+} finally {
+    driver.quit();
+    FileSystemUtils.deleteRecursively(tmp);   // 임시 프로필 정리
+}
+```
+
+> **핵심 교훈** 
+>
+> 1. **각 실행마다 독립 프로필** → Snap Chromium 잠금 회피
+> 2. **브라우저 ELF 경로와 드라이버 버전을 명시** → “no chrome binary”·“DevToolsActivePort” 종결
+> 3. 부족한 라이브러리·캐시·심볼릭 체인·버전 캐싱 이슈는 단계별로 확인·해결.
+
 
 ---
 
